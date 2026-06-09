@@ -26,6 +26,14 @@ urlpatterns = [
     'api/resume/',
     include('resumes.urls')
 ),
+    path(
+    'api/ats/',
+    include('ats.urls')
+),
+    path(
+    'api/jobs/',
+    include('jobs.urls')
+),
 ]
 urlpatterns += static(
     settings.MEDIA_URL,
