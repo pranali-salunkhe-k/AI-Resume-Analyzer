@@ -2,9 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Job
-from .serializers import JobSerializer
-
 from .job_matcher import calculate_match
+
+from utils.email_service import (
+    send_notification_email
+)
 
 
 class JobMatchView(APIView):
@@ -50,6 +52,30 @@ class JobMatchView(APIView):
             key=lambda x:
             x["match_score"],
             reverse=True
+        )
+
+        # Prepare Email Content
+        job_list = ""
+
+        for job in matched_jobs:
+
+            job_list += (
+                f"{job['job_title']} - "
+                f"{job['company']} "
+                f"({job['match_score']}%)\n"
+            )
+
+        send_notification_email(
+
+            "Job Recommendations",
+
+            f"""
+Recommended Jobs Based On Your Resume
+
+{job_list}
+            """,
+
+            "salunkhepanu2511@gmail.com"
         )
 
         return Response(

@@ -6,6 +6,10 @@ from .serializers import ResumeSerializer
 
 from .skill_extractor import extract_skills
 
+from utils.email_service import (
+    send_notification_email
+)
+
 import PyPDF2
 
 
@@ -48,6 +52,24 @@ class ResumeUploadView(APIView):
             )
 
             resume.save()
+
+            # Email Notification
+            send_notification_email(
+
+                "Resume Uploaded Successfully",
+
+                f"""
+Your resume has been uploaded successfully.
+
+Extracted Skills:
+
+{', '.join(skills)}
+
+Skills Count: {len(skills)}
+                """,
+
+                "salunkhepanu2511@gmail.com"
+            )
 
             return Response({
 

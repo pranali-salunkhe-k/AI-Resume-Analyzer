@@ -80,3 +80,11 @@
     font-weight:bold;
     color:#2563eb;
 }
+.card ul{
+    margin-top:10px;
+    padding-left:20px;
+}
+
+.card li{
+    margin-bottom:8px;
+}
