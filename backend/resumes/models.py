@@ -1,15 +1,16 @@
 from django.db import models
 
-from django.db import models
-
 class Resume(models.Model):
 
-    name = models.CharField(
-        max_length=100
-    )
+    name = models.CharField(max_length=100)
 
     resume_file = models.FileField(
         upload_to='resumes/'
+    )
+
+    extracted_skills = models.TextField(
+        blank=True,
+        null=True
     )
 
     uploaded_at = models.DateTimeField(

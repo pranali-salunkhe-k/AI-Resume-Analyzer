@@ -1,10 +1,10 @@
-from django.shortcuts import render
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Resume
 from .serializers import ResumeSerializer
+
+from .skill_extractor import extract_skills
 
 import PyPDF2
 
@@ -33,16 +33,33 @@ class ResumeUploadView(APIView):
             )
 
             for page in pdf_reader.pages:
-                text += page.extract_text()
+
+                page_text = page.extract_text()
+
+                if page_text:
+                    text += page_text
 
             pdf_file.close()
 
-            return Response({
-                "message":
-                "Resume Uploaded",
+            skills = extract_skills(text)
 
-                "text":
-                text[:3000]
+            resume.extracted_skills = (
+                ", ".join(skills)
+            )
+
+            resume.save()
+
+            return Response({
+
+                "message":
+                "Resume Uploaded Successfully",
+
+                "skills":
+                skills,
+
+                "skills_count":
+                len(skills)
+
             })
 
         return Response(
